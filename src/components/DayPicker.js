@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {colors} from '../global';
+import {colors} from '../utils/global';
 
 export default function ({activeDays = [], onChange = () => null}) {
   // NOTICE: days doesn't change if prop activeDays changes

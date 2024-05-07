@@ -14,6 +14,12 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-RNAlarm-RNAlarmTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-RNAlarm-RNAlarmTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		291793C18E64436CABEF2E3A /* Bevan-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EC1C4AB11564DD1A0012DBC /* Bevan-Regular.ttf */; };
+		0E00BCBF323D43C7AF57F546 /* DancingScript-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 839CB3DFE021447CA7137FCE /* DancingScript-VariableFont_wght.ttf */; };
+		BB894C58EEC9420CA40F6B1E /* Jersey10-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F314A84F6564495A72C8B37 /* Jersey10-Regular.ttf */; };
+		89BD1967359E4557AF63626B /* OpenSans-VariableFont_wdth,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 199140AFEFEC4180AF700904 /* OpenSans-VariableFont_wdth,wght.ttf */; };
+		5950E6454EDB4B059CEA17E0 /* Sedan-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C71C6D1542C34D35818C0B6D /* Sedan-Italic.ttf */; };
+		2563BE808284470388B58FF8 /* Sedan-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4DCD37E399142ECB5CC5511 /* Sedan-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +50,12 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RNAlarm/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-RNAlarm-RNAlarmTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNAlarm-RNAlarmTests.release.xcconfig"; path = "Target Support Files/Pods-RNAlarm-RNAlarmTests/Pods-RNAlarm-RNAlarmTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		1EC1C4AB11564DD1A0012DBC /* Bevan-Regular.ttf */ = {isa = PBXFileReference; name = "Bevan-Regular.ttf"; path = "../assets/fonts/Bevan-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		839CB3DFE021447CA7137FCE /* DancingScript-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "DancingScript-VariableFont_wght.ttf"; path = "../assets/fonts/DancingScript-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0F314A84F6564495A72C8B37 /* Jersey10-Regular.ttf */ = {isa = PBXFileReference; name = "Jersey10-Regular.ttf"; path = "../assets/fonts/Jersey10-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		199140AFEFEC4180AF700904 /* OpenSans-VariableFont_wdth,wght.ttf */ = {isa = PBXFileReference; name = "OpenSans-VariableFont_wdth,wght.ttf"; path = "../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C71C6D1542C34D35818C0B6D /* Sedan-Italic.ttf */ = {isa = PBXFileReference; name = "Sedan-Italic.ttf"; path = "../assets/fonts/Sedan-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A4DCD37E399142ECB5CC5511 /* Sedan-Regular.ttf */ = {isa = PBXFileReference; name = "Sedan-Regular.ttf"; path = "../assets/fonts/Sedan-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +134,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				2CC520734883427BB0F523F2 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +160,20 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		2CC520734883427BB0F523F2 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				1EC1C4AB11564DD1A0012DBC /* Bevan-Regular.ttf */,
+				839CB3DFE021447CA7137FCE /* DancingScript-VariableFont_wght.ttf */,
+				0F314A84F6564495A72C8B37 /* Jersey10-Regular.ttf */,
+				199140AFEFEC4180AF700904 /* OpenSans-VariableFont_wdth,wght.ttf */,
+				C71C6D1542C34D35818C0B6D /* Sedan-Italic.ttf */,
+				A4DCD37E399142ECB5CC5511 /* Sedan-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -244,6 +271,12 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				291793C18E64436CABEF2E3A /* Bevan-Regular.ttf in Resources */,
+				0E00BCBF323D43C7AF57F546 /* DancingScript-VariableFont_wght.ttf in Resources */,
+				BB894C58EEC9420CA40F6B1E /* Jersey10-Regular.ttf in Resources */,
+				89BD1967359E4557AF63626B /* OpenSans-VariableFont_wdth,wght.ttf in Resources */,
+				5950E6454EDB4B059CEA17E0 /* Sedan-Italic.ttf in Resources */,
+				2563BE808284470388B58FF8 /* Sedan-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

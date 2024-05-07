@@ -19,7 +19,7 @@ export default function ({hour, minutes, onChange = () => null}) {
       {showPicker && (
         <DateTimePicker
           testID="dateTimePicker"
-          timeZoneOffsetInMinutes={0}
+          timeZoneOffsetInMinutes={420}
           value={getDate(hour, minutes)}
           mode={'time'}
           is24Hour={true}

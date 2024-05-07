@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {StyleSheet, Switch, Text, TouchableOpacity, View} from 'react-native';
-import {colors} from '../global';
+import {colors} from '../utils/global';
 
 export default function ({
   uid,

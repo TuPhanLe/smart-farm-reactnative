@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {TextInput, View, StyleSheet, Text} from 'react-native';
-import {colors} from '../global';
+import {colors} from '../utils/global';
 
 export default function ({onChangeText, value, description}) {
   return (

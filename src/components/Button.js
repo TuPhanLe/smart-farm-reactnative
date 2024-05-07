@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {colors} from '../global';
+import {colors} from '../utils/global';
 
 export default function ({onPress, title, fill = false}) {
   return (

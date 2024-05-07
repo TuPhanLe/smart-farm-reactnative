@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {View, Switch, Text, StyleSheet} from 'react-native';
-import {colors} from '../global';
+import {colors} from '../utils/global';
 
 export default function ({value, onChange, description}) {
   return (
