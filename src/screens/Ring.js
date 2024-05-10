@@ -7,37 +7,46 @@ import Button from '../components/Button';
 import {colors, globalStyles} from '../utils/global';
 import MqttService from '../helpers/MqttService';
 
-const topic = 'data_gateway/to/server';
+const topicToGW = 'server/to/gateway'
 
 export default function ({route, navigation}) {
   const [alarm, setAlarm] = useState(null);
 
   useEffect(() => {
     const alarmUid = route.params.alarmUid;
-    MqttProcess();
-    console.log('Ring ring ring');
     (async function () {
       const myAlarm = await getAlarm(alarmUid);
+      console.log(myAlarm);
       setAlarm(myAlarm);
+      SendAlarmCommand(myAlarm.hour, myAlarm.minutes, myAlarm.snoozeInterval);
     })();
   }, []);
 
-  const MqttProcess = () => {
-    const service = new MqttService();
-    const success = () => {
-      console.log('Connected to server');
-      console.log('topic: ', topic);
-      service.subscribeTopic(`${topic}`);
-    };
-    service.connect(success);
-    const client = service.getCLient();
+  function ConverAlarmToCommand(hourStart, minuteStart, duration) {
+    let hourEnd = Math.floor(hourStart + (duration / 60));
+    let minuteEnd = minuteStart + (duration % 60);
+    if (minuteEnd >= 60) {
+        hourEnd++;
+        minuteEnd -= 60;
+    }
+    const hexHourStart = hourStart.toString(16).padStart(2, '0').toUpperCase();
+    const hexMinuteStart = minuteStart.toString(16).padStart(2, '0').toUpperCase();
+    const hexHourEnd = hourEnd.toString(16).padStart(2, '0').toUpperCase();
+    const hexMinuteEnd = minuteEnd.toString(16).padStart(2, '0').toUpperCase();
 
-    client.onMessageArrived = message => {
-      const payload = message.payloadString;
-      console.log('Message received on topic: ' + message.destinationName);
-      console.log('Message content: ' + payload);
-    };
-  };
+    return `03 06 ${hexHourStart} ${hexMinuteStart} ${hexHourEnd} ${hexMinuteEnd}`;
+}
+const SendAlarmCommand = (time, hour, duration) => {
+    var command = ConverAlarmToCommand(time, hour, duration);
+    const service = new MqttService()
+    const success = () => {
+        console.log('Connected to server');
+        console.log('topic: ', topicToGW);
+        service.sendMessage(`${topicToGW}`, command)
+    }
+    service.connect(success)
+}
+
   if (!alarm) {
     return <View />;
   }

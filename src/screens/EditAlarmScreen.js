@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import Alarm, {removeAlarm, scheduleAlarm, updateAlarm} from '../utils/alarm';
+import Alarm, {removeAlarm, scheduleAlarm, snoozeAlarm, updateAlarm} from '../utils/alarm';
 import GlobalStyle from '../utils/GlobalStyle';
 import TextInput from '../components/TextInput';
 import DayPicker from '../components/DayPicker';
@@ -12,16 +12,14 @@ import SwitcherInput from '../components/SwitcherInput';
 export default function EditAlarmScreen({route, navigation}) {
 const [alarm, setAlarm] = useState(null);
 const [mode, setMode] = useState(null);
-
+const [duration, setDuration] = useState(1);
 useEffect(() => {
 if (route.params && route.params.alarm) {
     setAlarm(new Alarm(route.params.alarm));
     setMode('EDIT');
-    console.log('EDIT');
 } else {
     setAlarm(new Alarm());
     setMode('CREATE');
-    console.log('CREATE');
 }
 }, []);
 
@@ -39,7 +37,7 @@ if (mode === 'EDIT') {
     await updateAlarm(alarm);
 }
 if (mode === 'CREATE') {
-    console.log(alarm);
+    alarm.snoozeInterval = parseFloat(duration);
     await scheduleAlarm(alarm);
 }
 navigation.goBack();
@@ -80,6 +78,12 @@ return (
         onChangeText={v => update([['description', v]])}
         value={alarm.description}
         />
+        <TextInput
+        description={'Thời lượng'}
+        defaultValue = {1}
+        style={styles.textInput}
+        onChangeText={v => setDuration(v)}
+        />
         <SwitcherInput
         description={'Lặp lại'}
         value={alarm.repeating}
@@ -88,7 +92,6 @@ return (
         {alarm.repeating && (
         <DayPicker
             onChange={v => update([['days', v]])}
-            // activeDays={alarm.days}
         />
         )}
     </View>

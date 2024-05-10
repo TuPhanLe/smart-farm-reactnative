@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { createContext, useState } from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
@@ -16,8 +16,15 @@ import AlarmScreen from './screens/AlarmScreen';
 import EditAlarmScreen from './screens/EditAlarmScreen';
 const Stack = createStackNavigator();
 
+export const MyContext = createContext();
+
 export default function () {
+  const [receiNodeSensor1, setReceiNodeSensor1] = useState(false)
+  const [receiNodeSensor2, setReceiNodeSensor2] = useState(false)
+  const [receiValveState, setReceiValveState] = useState(false);
   return (
+    <MyContext.Provider value={{receiNodeSensor1, receiNodeSensor2, receiValveState,
+                                  setReceiNodeSensor1, setReceiNodeSensor2, setReceiValveState}}>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -31,7 +38,7 @@ export default function () {
         <Stack.Screen name="DỮ LIỆU KHU VỰC 1" component={DataScreenArea1} />
         <Stack.Screen name="DỮ LIỆU KHU VỰC 2" component={DataScreenArea2} />
         <Stack.Screen name="ĐIỀU KHIỂN" component={ControlScreen} />
-        <Stack.Screen name="HẸN GIỜ" component={AlarmScreen} 
+        <Stack.Screen name="HẸN GIỜ" component={AlarmScreen}
         options={params => ({
           ...headerStyles,
           headerRight: () => (
@@ -50,6 +57,7 @@ export default function () {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </MyContext.Provider>
   );
 }
 

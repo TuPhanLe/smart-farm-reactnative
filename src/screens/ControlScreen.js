@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
 StyleSheet,
 View,
@@ -11,12 +11,61 @@ TextInput,
 Image,
 } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
+import MqttService from '../helpers/MqttService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MyContext} from '../App';
 
-
+const topicToGW = 'server/to/gateway'
+const onCommand = ' 03 06 01 00 00 00 00 00 '
+const offCommand = ' 03 06 00 00 00 00 00 00 '
 export default function ControlScreen({navigation, route}) {
     const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const [initialMount, setInitialMount] = useState(true);
+    const [valveState, setValveState] = useState(false);
+    const [alarmState, setAlarmState] = useState(false);
+    const dataContext = useContext(MyContext);
+    useEffect(() => {
+        const service = new MqttService()
+            const success = () => {
+                console.log('Connected to server');
+                console.log('topic: ', topicToGW);
+                if (isEnabled === true) {
+                    service.sendMessage(`${topicToGW}`, onCommand)
+                    setInitialMount(false);
+                }
+                if (initialMount && isEnabled === false) {
+                    return; // Nếu đúng, không thực hiện gì cả
+                }
+                if (!initialMount && isEnabled === false) {
+                    service.sendMessage(`${topicToGW}`, offCommand)
+                }
+            }
+            service.connect(success)}
+        , [isEnabled])
+    const toggleSwitch = () => {
+        setIsEnabled(previousState => !previousState);
+    };
 
+    useEffect(() => {
+        getVavleStatus();
+    }, [dataContext.receiValveState]);
+
+
+
+    const getVavleStatus = async () => {
+        try {
+            let valveStatus = await AsyncStorage.getItem('valve-status');
+            valveStatus = JSON.parse(valveStatus)
+            if (valveStatus.status === '01') {setValveState(true);}
+            else {setValveState(false);}
+            if (valveStatus.alarm === '01') {setAlarmState(true);}
+            else {setAlarmState(false);}
+            dataContext.setReceiValveState(false);
+            console.log(dataContext);
+        } catch (e) {
+            // error reading value
+        }
+        };
     const HandleAlarm = () => {
 
         navigation.navigate('HẸN GIỜ')
@@ -26,7 +75,7 @@ return (
     <View style={styles.directPress}>
     <View style={styles.blockPump}>
         <Text style={styles.text}>BƠM NƯỚC </Text>
-        <Text style={styles.text}>{isEnabled ? 'Bật' : 'Tắt'}</Text>
+        <Text style={styles.text}>{isEnabled ? 'Bật' : 'Tắt'} </Text>
         <Switch
         trackColor={{false: '#767577', true: '#81b0ff'}}
         thumbColor={isEnabled ? '#f5ad4b' : '#f4f3f4'}
@@ -52,9 +101,9 @@ return (
     <Text style={styles.textConnect}>TRẠNG THÁI VAN</Text>
     <View style={styles.block}>
         <Text style={styles.text}>VAN NƯỚC </Text>
-        <Text style={styles.text}>{isEnabled ? 'Bật' : 'Tắt'}</Text>
+        <Text style={styles.text}>{valveState ? 'Bật' : 'Tắt' } {alarmState && 'bằng hẹn giờ'}</Text>
         <Image
-        source={isEnabled ? require('../../assets/pic/on.jpg') : require('../../assets/pic/off.jpg') }
+        source={valveState ? require('../../assets/pic/on.jpg') : require('../../assets/pic/off.jpg') }
         style={styles.image} />
     </View>
     </View>

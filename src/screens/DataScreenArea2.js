@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState} from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import {
 StyleSheet,
 View,
@@ -11,20 +11,122 @@ ImageBackground,
 Image,
 } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MyContext} from '../App';
+import Button from '../components/Button';
+import MqttService from '../helpers/MqttService';
+const topicToGW = 'server/to/gateway'
+
 const initData = {
 temp: 0,
 humidity: 0,
 light: 0,
 soil: 0,
 };
-export default function DataScreenArea2({navigation, route}) {
-const [dataEnvironment, setDataEnvironment] = useState(initData);
+const initDate = {
+date: '',
+time: '',
+};
+export default function DataScreenArea1({navigation, route}) {
 const [timeCollectData, setTimeCollectData] = useState(1);
-
-const HandleAreaScreen1 = () => {
-    navigation.navigate('DỮ LIỆU KHU VỰC 1')
+const [updateDate, setUpdateDate] = useState(initDate);
+const [dataEnvironment, setDataEnvironment] = useState(initData);
+const dataContext = useContext(MyContext);
+useEffect(() => {
+if (dataContext.receiNodeSensor2) {
+    getDataSensor();
+    updateTime();
 }
+}, [dataContext.receiNodeSensor2]);
 
+useEffect(() => {
+    getTimePeriod();
+    getDataSensor();
+    getUpdateTime();
+}
+, []);
+
+
+const updateTime = () => {
+let newDate = new Date().toLocaleDateString();
+let newTime = new Date().toLocaleTimeString();
+setUpdateDate({date: newDate, time: newTime});
+storeUpdateTime({date: newDate, time: newTime});
+};
+const getDataSensor = async () => {
+try {
+    let dataSensor = await AsyncStorage.getItem('dataSensor2');
+    setDataEnvironment(JSON.parse(dataSensor));
+    dataContext.setReceiNodeSensor2(false);
+} catch (e) {
+    // error reading value
+}
+};
+const storeUpdateTime = async value => {
+    try {
+        const valueJSON = JSON.stringify(value);
+        await AsyncStorage.setItem('time-update-node2', valueJSON);
+        console.log('set time update success', valueJSON);
+    } catch (e) {
+        console.log(e);
+    }
+    };
+const getUpdateTime = async () => {
+try {
+    let timeUpdate = await AsyncStorage.getItem('time-update-node2');
+    if (JSON.parse(timeUpdate) != null) {setUpdateDate(JSON.parse(timeUpdate));}
+    console.log('parse time update success', JSON.parse(timeUpdate));
+} catch (e) {
+    // error reading value
+}
+};
+const HandleAreaScreen1 = () => {
+navigation.navigate('DỮ LIỆU KHU VỰC 1');
+};
+const storeTimePeriod = async value => {
+try {
+    await AsyncStorage.setItem('time-period', value);
+    console.log('set time collect success');
+} catch (e) {
+    console.log(e);
+}
+};
+const getTimePeriod = () => {
+try {
+    AsyncStorage.getItem('time-period').then(value => {
+    setTimeCollectData(value);
+    });
+} catch (error) {
+    console.log(error);
+}
+};
+
+const HandleSetTime = value => {
+    setTimeCollectData(value);
+};
+
+const onSave = value => {
+    SendPeriodCommand(timeCollectData);
+    storeTimePeriod(timeCollectData);
+};  
+function ConvertPeriodToCommand(value) {
+    var valueInSec = value * 60;
+    var valueInHex = valueInSec.toString(16).toUpperCase();
+    var zeroString = '0'.repeat(8 - valueInHex.length);
+    var newString = zeroString.concat(valueInHex);
+    var pairs = newString.match(/.{1,2}/g);
+    return ' 01 04 ' + pairs.join(' ') + ' ';
+}
+const SendPeriodCommand = value => {
+    var command = ConvertPeriodToCommand(value);
+    const service = new MqttService()
+    const success = () => {
+        console.log('Connected to server');
+        console.log('topic: ', topicToGW);
+        service.sendMessage(`${topicToGW}`, command)
+    }
+    service.connect(success)
+}
 return (
 <View style={styles.body}>
     <Image
@@ -41,7 +143,6 @@ return (
         <Text style={[styles.text, GlobalStyle.CustomFont]}>KHU VỰC 1</Text>
     </Pressable>
     <Pressable
-        // onPress={HandleFeatureScreen}
         style={({pressed}) => [
         styles.pressedStyle,
         pressed && {opacity: 0.6, backgroundColor: '#ddd'},
@@ -58,11 +159,16 @@ return (
         style={styles.input}
         keyboardType="numeric"
         onChangeText={value => {
-        setTimeCollectData(value);
+        HandleSetTime(value);
         }}
     />
+    <View style={styles.buttonContainer}>
+        <Button fill={true} onPress={onSave} title={'Cài đặt'} />
     </View>
-    <Text style={styles.text}> Dữ liệu được cập nhật tại thời điểm: </Text>
+    </View>
+    <Text style={styles.text}>
+    Thời gian {updateDate.time} {updateDate.date}
+    </Text>
     <View style={styles.blockData}>
     <View style={styles.block}>
         <Text style={styles.text}>NHIỆT ĐỘ</Text>
@@ -138,20 +244,20 @@ borderWidth: 1,
 borderColor: '#ccc',
 margin: 10,
 width: 400,
-height: 120,
+height: 180,
 backgroundColor: '#ffffff',
 },
 input: {
 height: 40,
 margin: 12,
-borderWidth: 1,
+borderWidth: 0.5,
 padding: 10,
 },
 pressedStyle: {
 alignItems: 'center',
 justifyContent: 'center',
 width: 180,
-height: 60,
+height: 40,
 margin: 10,
 borderRadius: 10,
 borderWidth: 1,
@@ -163,4 +269,9 @@ flexDirection: 'row',
 alignItems: 'center',
 justifyContent: 'center',
 },
+buttonContainer: {
+flexDirection: 'row',
+alignItems: 'center',
+justifyContent: 'center',
+    },
 });

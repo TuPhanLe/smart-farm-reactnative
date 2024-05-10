@@ -4,6 +4,7 @@ import {StyleSheet} from 'react-native';
 export const colors = {
   GREY: '#d0d5dc',
   BLUE: '#1992fe',
+  GREEN: '#008000'
 };
 
 export const globalStyles = StyleSheet.create({

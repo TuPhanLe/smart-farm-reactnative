@@ -27,11 +27,11 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     borderWidth: 2,
-    borderColor: colors.BLUE,
+    borderColor: colors.GREEN,
     borderRadius: 25,
   },
   fillContainer: {
-    backgroundColor: colors.BLUE,
+    backgroundColor: colors.GREEN,
   },
   normalContainer: {
     backgroundColor: 'transparent',
