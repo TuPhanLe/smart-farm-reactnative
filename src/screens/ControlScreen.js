@@ -56,9 +56,9 @@ export default function ControlScreen({navigation, route}) {
         try {
             let valveStatus = await AsyncStorage.getItem('valve-status');
             valveStatus = JSON.parse(valveStatus)
-            if (valveStatus.status === '01') {setValveState(true);}
+            if (valveStatus.direct === '1') {setValveState(true);}
             else {setValveState(false);}
-            if (valveStatus.alarm === '01') {setAlarmState(true);}
+            if (valveStatus.alarm === '1') {setAlarmState(true); setValveState(true);}
             else {setAlarmState(false);}
             dataContext.setReceiValveState(false);
             console.log(dataContext);

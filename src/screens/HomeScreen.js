@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState, useContext} from 'react';
-import {StyleSheet, View, Text, Pressable, TextInput} from 'react-native';
+import {StyleSheet, View, Text, Pressable, ToastAndroid, ActivityIndicator} from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MqttService from '../helpers/MqttService';
@@ -24,10 +24,11 @@ light: 0,
 soil: 0,
 };
 export default function HomeScreen({navigation, route}) {
-const [nodeCenter, setNodeCenter] = useState(true);
+const [nodeCenter, setNodeCenter] = useState(false);
 const [nodeControl, setNodeControl] = useState(false);
 const [nodeSensor1, setNodeSensor1] = useState(false);
 const [nodeSensor2, setNodeSensor2] = useState(false);
+const [activityIndicator, setActivityIndicator] = useState(true);
 const dataContext = useContext(MyContext);
 
 useEffect(() => {
@@ -39,21 +40,20 @@ MqttProcess();
 const storeDataSensor = async value => {
 try {
     let data = value.split(' ');
-    let node = data[3];
-    if (node === '01') {
-    dataSensorNode1.temp = parseInt(data[4].concat(data[5]), 16) / 100;
-    dataSensorNode1.humidity = parseInt(data[6].concat(data[7]), 16) / 100;
-    dataSensorNode1.soil = parseInt(data[8].concat(data[9]), 16) / 100;
-    dataSensorNode1.light =
-        parseInt(data[10].concat(data[11], data[12], data[13]), 16) / 100;
+    let node = value.charAt(5);
+    if (node === '1') {
+        dataSensorNode1.temp = parseInt(value.substring(6,10),16) / 100;
+        dataSensorNode1.humidity = parseInt(value.substring(10,14),16) / 100;
+        dataSensorNode1.soil = parseInt(value.substring(14,18),16)/ 100;
+        dataSensorNode1.light = parseInt(value.substring(18,27),16) / 100;
     dataContext.setReceiNodeSensor1(true);
     }
-    if (node === '02') {
-    dataSensorNode2.temp = parseInt(data[4].concat(data[5]), 16) / 100;
-    dataSensorNode2.humidity = parseInt(data[6].concat(data[7]), 16) / 100;
-    dataSensorNode2.soil = parseInt(data[8].concat(data[9]), 16) / 100;
-    dataSensorNode2.light =
-        parseInt(data[10].concat(data[11], data[12], data[13]), 16) / 100;
+    if (node === '2') {
+        dataSensorNode2.temp = parseInt(value.substring(6,10),16) / 100;
+        dataSensorNode2.humidity = parseInt(value.substring(10,14),16) / 100;
+        dataSensorNode2.soil = parseInt(value.substring(14,18),16)/ 100;
+        dataSensorNode2.light = parseInt(value.substring(18,27),16) / 100;
+    console.log(dataSensorNode2);
     dataContext.setReceiNodeSensor2(true);
     }
     const jsondataSensorNode1 = JSON.stringify(dataSensorNode1);
@@ -67,24 +67,26 @@ try {
 const storeCheckStatus = async value => {
 try {
     if (value.charAt(2) === '0') {
-    if (value.charAt(8) === '1') {
+    if (value.charAt(5) === '1') {
         setNodeControl(true);
+        setNodeCenter(true);
     } else {
         setNodeControl(false);
     }
-    if (value.charAt(11) === '1') {
+    if (value.charAt(7) === '1') {
         setNodeSensor1(true);
     } else {
         setNodeSensor1(false);
     }
-    if (value.charAt(14) === '1') {
+    if (value.charAt(9) === '1') {
         setNodeSensor2(true);
     } else {
         setNodeSensor2(false);
     }
     }
-    if (value.charAt(2) === '3') {
+    if (value.charAt(1) === '3') {
     var status = ConvertValveStatus(value);
+    console.log(value);
     const valueJSON = JSON.stringify(status);
     await AsyncStorage.setItem('valve-status', valueJSON);
     dataContext.setReceiValveState(true);
@@ -95,15 +97,14 @@ try {
 }
 };
 function ConvertValveStatus (value) {
-const parts = value.trim().split(' ');
-
-if (parts.length !== 4) {
-    throw new Error('Chuỗi không hợp lệ');
-}
+const part1 = value.charAt(5);
+const part2 = value.charAt(7);
+    
 const result = {
-    status: parts[2],
-    alarm: parts[3],
+    direct: part1,                  // 01 
+    alarm: part2,
 };
+console.log(result);
 return result;
 };
 const MqttProcess = () => {
@@ -138,12 +139,22 @@ const success = () => {
 };
 service.connect(success);
 };
-const HandleFeatureScreen = () => {
-navigation.navigate('TÍNH NĂNG');
-};
+
 const HandleTest = () => {
 CheckState();
+ToastAndroid.show('Đã gửi gói tin kiểm tra trạng thái', ToastAndroid.SHORT, ToastAndroid.LONG,
+ToastAndroid.BOTTOM,
+25,
+50,);
 console.log('Pressed');
+};
+
+const HandleFeatureScreen = () => {
+    navigation.navigate('TÍNH NĂNG');
+    };
+
+const HandleBluetooth = () => {
+    navigation.navigate('CÀI ĐẶT');
 };
 
 return (
@@ -169,7 +180,15 @@ return (
     </Pressable>
     </View>
     <View style={[styles.statusConnetion]}>
-    <Text style={styles.textConnect}>TRẠNG THÁI KẾT NỐI</Text>
+
+    <Text style={styles.textConnect}>TRẠNG THÁI KẾT NỐI 
+        {/* {activityIndicator && 
+    <ActivityIndicator size='large' color="#d0d5dc"  />
+
+} */}
+    </Text>
+
+
     <View style={styles.block}>
         <Text style={styles.text}>Khối trung tâm </Text>
         {nodeCenter ? (
@@ -203,6 +222,19 @@ return (
         )}
     </View>
     </View>
+    <View style={styles.bluetoothCheck}>    
+        <Pressable
+        onPress={HandleBluetooth}
+        style={({pressed}) => [
+        styles.pressedStyle,
+        pressed && {opacity: 0.6, backgroundColor: '#ddd'},
+        ]}>
+        <Text style={[styles.text, GlobalStyle.CustomFont]}>
+        CÀI ĐẶT 
+        </Text>
+    </Pressable>
+    </View>
+
 </View>
 );
 }
@@ -232,7 +264,7 @@ backgroundColor: '#ffffff',
 },
 statusConnetion: {
 marginLeft: 20,
-flex: 4,
+flex: 2,
 fontSize: 26,
 },
 text: {
@@ -267,4 +299,19 @@ disconnectText: {
 color: 'red',
 marginLeft: 10,
 },
+bluetoothCheck: {
+    flex: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: 50,
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
 });

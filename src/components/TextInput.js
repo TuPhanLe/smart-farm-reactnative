@@ -3,7 +3,7 @@ import React from 'react';
 import {TextInput, View, StyleSheet, Text} from 'react-native';
 import {colors} from '../utils/global';
 
-export default function ({onChangeText, value, description}) {
+export default function ({onChangeText, value, description, secure, min}) {
   return (
     <View style={styles.container}>
       <View style={styles.descriptionContainer}>
@@ -13,6 +13,8 @@ export default function ({onChangeText, value, description}) {
         style={styles.textInput}
         onChangeText={onChangeText}
         value={value}
+        secureTextEntry={secure}
+        minLength = {min}
       />
     </View>
   );

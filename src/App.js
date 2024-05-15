@@ -14,6 +14,7 @@ import DataScreenArea2 from './screens/DataScreenArea2';
 import ControlScreen from './screens/ControlScreen';
 import AlarmScreen from './screens/AlarmScreen';
 import EditAlarmScreen from './screens/EditAlarmScreen';
+import BLESettingScreen from './screens/BLESettingScreen'
 const Stack = createStackNavigator();
 
 export const MyContext = createContext();
@@ -26,7 +27,7 @@ export default function () {
     <MyContext.Provider value={{receiNodeSensor1, receiNodeSensor2, receiValveState,
                                   setReceiNodeSensor1, setReceiNodeSensor2, setReceiValveState}}>
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="SMART FARM">
         <Stack.Screen
           name="SMART FARM"
           component={HomeScreen}
@@ -34,6 +35,8 @@ export default function () {
             headerShown: true,
           }}
         />
+        <Stack.Screen name="CÀI ĐẶT" component={BLESettingScreen} />
+
         <Stack.Screen name="TÍNH NĂNG" component={FeatureScreen} />
         <Stack.Screen name="DỮ LIỆU KHU VỰC 1" component={DataScreenArea1} />
         <Stack.Screen name="DỮ LIỆU KHU VỰC 2" component={DataScreenArea2} />

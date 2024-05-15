@@ -34,7 +34,7 @@ export default function ({route, navigation}) {
     const hexHourEnd = hourEnd.toString(16).padStart(2, '0').toUpperCase();
     const hexMinuteEnd = minuteEnd.toString(16).padStart(2, '0').toUpperCase();
 
-    return `03 06 ${hexHourStart} ${hexMinuteStart} ${hexHourEnd} ${hexMinuteEnd}`;
+    return ` 03 06 00 01 ${hexHourStart} ${hexMinuteStart} ${hexHourEnd} ${hexMinuteEnd} `;
 }
 const SendAlarmCommand = (time, hour, duration) => {
     var command = ConverAlarmToCommand(time, hour, duration);

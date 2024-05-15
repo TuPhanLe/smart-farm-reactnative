@@ -7,7 +7,6 @@ View,
 Text,
 Pressable,
 TextInput,
-ImageBackground,
 Image,
 } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
@@ -139,10 +138,10 @@ return (
     <View style={styles.directPress}>
     <Pressable
         style={({pressed}) => [
-        styles.pressedStyle,
+        styles.pressedStyleInScreen,
         pressed && {opacity: 0.6, backgroundColor: '#ddd'},
         ]}>
-        <Text style={[styles.text, GlobalStyle.CustomFont]}>KHU VỰC 1</Text>
+        <Text style={[styles.textButton, GlobalStyle.CustomFont]}>KHU VỰC 1</Text>
     </Pressable>
     <Pressable
         onPress={HandleAreaScreen2}
@@ -174,26 +173,51 @@ return (
     </Text>
     <View style={styles.blockData}>
     <View style={styles.block}>
+    <View style={styles.dataSensor}>
         <Text style={styles.text}>NHIỆT ĐỘ</Text>
         <Text style={styles.text}>{dataEnvironment.temp} °C</Text>
-        <View />
+        <Image
+        source={require('../../assets/pic/temperature.png')}
+        style={styles.imageInBlock}
+        />
+    </View>
+    <View />
     </View>
 
     <View style={styles.block}>
+    <View style={styles.dataSensor}>
         <Text style={styles.text}>ĐỘ ẨM</Text>
         <Text style={styles.text}>{dataEnvironment.humidity} %</Text>
+        <Image
+        source={require('../../assets/pic/humidity.png')}
+        style={styles.imageInBlock}
+        />
+        </View>
     </View>
     <View />
     </View>
     <View style={styles.blockData}>
     <View style={styles.block}>
+    <View style={styles.dataSensor}>
         <Text style={styles.text}>CƯỜNG ĐỘ ÁNH SÁNG</Text>
         <Text style={styles.text}>{dataEnvironment.light} LUX</Text>
+        <Image
+        source={require('../../assets/pic/light.png')}
+        style={styles.imageInBlock}
+        />
         <View />
     </View>
+    <View />
+    </View>
     <View style={styles.block}>
+        <View style={styles.dataSensor}>
         <Text style={styles.text}>ĐỘ ẨM ĐẤT</Text>
         <Text style={styles.text}>{dataEnvironment.soil} %</Text>
+        <Image
+        source={require('../../assets/pic/soil.png')}
+        style={styles.imageInBlock}
+        />
+        </View>
         <View />
     </View>
     </View>
@@ -225,6 +249,13 @@ fontSize: 14,
 fontWeight: 'bold',
 margin: 10,
 },
+
+textButton: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    margin: 10,
+    color:'#fff'
+    },
 block: {
 flex: 1,
 alignItems: 'flex-start',
@@ -267,6 +298,17 @@ borderWidth: 1,
 borderColor: '#ccc',
 backgroundColor: '#ffffff',
 },
+pressedStyleInScreen: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 180,
+    height: 40,
+    margin: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#008000',
+    },
 directPress: {
 flexDirection: 'row',
 alignItems: 'center',
@@ -277,4 +319,14 @@ flexDirection: 'row',
 alignItems: 'center',
 justifyContent: 'center',
     },
+dataSensor: {
+    position:'absolute',
+},
+imageInBlock: {
+    position:'relative',
+    bottom: 40,
+    left: 140,
+    width: 50,
+    height: 50,
+},
 });
